@@ -1,0 +1,433 @@
+//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
+// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+
+
+import java.net.Inet4Address;
+import java.sql.SQLOutput;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Semaphore;
+
+
+
+class Employee {
+    String name;
+    String dept;
+    double salary;
+
+    public Employee(String name,String dept,  double salary) {
+        this.dept = dept;
+        this.name = name;
+        this.salary = salary;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDept() {
+        return dept;
+    }
+
+    public void setDept(String dept) {
+        this.dept = dept;
+    }
+
+    public double getSalary() {
+        return salary;
+    }
+
+    public void setSalary(double salary) {
+        this.salary = salary;
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Employee employee = (Employee) o;
+        return Objects.equals(name, employee.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(name);
+    }
+
+    @Override
+    public String toString() {
+        return "Employee{" +
+                "name='" + name + '\'' +
+                ", dept='" + dept + '\'' +
+                ", salary=" + salary +
+                '}';
+    }
+}
+public class Main {
+    public static void main(String[] args) {
+
+        //set ignore duplicates based on hashcode and equals method for specific  field (only name)
+        //and consider two object to be single
+        Set<Employee> set=new HashSet<>();
+        Employee e1= new Employee("Amit","IT",30000);
+        Employee e2= new Employee("Amit","bio",30000);
+
+        set.add(e1);
+        set.add(e2);
+
+        System.out.println(set.size());
+        System.out.println("Value::"+set);
+
+
+        // Hashmap replaces the value with with latest record if key are duplicate
+        HashMap<Employee,String> map=new HashMap<>();
+        map.put(e1,"Amit");
+        map.put(e2,"Sumit");
+
+        System.out.println("Hashmap size "+map.size()+"Details::"+map);
+
+
+/// /////////////////////////////////////////////////////////////////////////////
+
+        //Program to find character count in a string -use hashmap
+
+        String input="abccdd";
+        Map<Character,Integer> freqmap=new HashMap<>();
+
+        for(Character c :input.toCharArray()){
+            freqmap.put(c,freqmap.getOrDefault(c,0)+1);
+        }
+
+        System.out.println("Frequency of characters"+freqmap);
+
+ ////////////////////////////////////////////////////////////////////////////////////
+        //Find department with highest salary
+        List<Employee> employeeList= List.of(
+                new Employee("Amit","IT",30000),
+                new Employee("Anil","IT",29000),
+                new Employee("Ashok","IT",21000),
+                new Employee("Sumit","bio",4000),
+                new Employee("rohan","Compute science",90000)
+                );
+        Map<String, Optional<Employee>> result =
+                employeeList.stream()
+                        .collect(Collectors.groupingBy(
+                                Employee::getDept,
+                                Collectors.maxBy(Comparator.comparing(Employee::getSalary))
+                        ));
+
+
+        for(Map.Entry<String,Optional<Employee>>mapValues : result.entrySet())
+        {
+            System.out.println("Map::"+mapValues.getKey()+ "Values "+ mapValues.getValue());
+        }
+
+/// //////////////////////////////////////////////////////////////////////////////
+
+        //2. find out common prefix character in string array
+
+        String[] inputString={"Amit","Ammu","Amil"};
+
+        String prefix=inputString[0];
+
+        for(int i=1;i<inputString.length;i++){
+
+            while(!inputString[i].startsWith(prefix)){
+
+                prefix=prefix.substring(0,prefix.length()-1);
+            }
+        }
+
+        System.out.println("Common Prefix"+prefix);
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+
+        //find out top 3 name of employee basis of salary using stream api.
+
+        List<String> list1= employeeList.stream().
+                sorted(Comparator.comparing(Employee::getSalary).reversed())
+                .limit(3).map(Employee::getName)
+                .toList();
+
+        System.out.println("Top 3 Highest salary employee"+list1);
+
+
+  ///////////////////////////////////////////////////////////////////////////////////////////
+        //Creating a immutable list in streams
+
+        //var result= Stream.of("null","Amit","IT").toList();
+        // result.add("Jake Gilly"); //cannot be done
+
+        //create mutable list in streams
+
+        var resultMutable = Stream.of("amit","IT",1000).collect(Collectors.toList());
+        resultMutable.add("Jake");
+        System.out.println("Result Mutable" +resultMutable);
+
+
+
+        //Java program to find the index of a particular string in a List
+
+        //create 2 List Find the index of Hello and Hi
+
+        //create 2 List Find the index of Hello and Hi
+        List<String> a= Arrays.asList("Eshita","Hello","Hi");
+        List<String> b= Arrays.asList("Hello","Hi");
+
+        System.out.println("Index fetch"+a.indexOf("Hello"));
+
+
+        //How to find duplicate elements in a string using streams
+
+        String check="programming";
+
+        Set<Character> seen=new HashSet<>();
+        Set<Character> duplicates =
+                check.chars().
+                        mapToObj(e->(char) e).
+                        filter(e->!seen.add(e))
+                        .collect(Collectors.toSet());
+
+        System.out.println("Duplicates in String"+duplicates);
+        System.out.println("Non duplicates in String"+seen);
+
+
+        //First non repeated character in a string
+
+//        String checkFirstRepated = "Ammit";
+//
+//        HashMap<Character,Integer> countMap =new HashMap<>();
+//
+//        for(Character e :checkFirstRepated.toCharArray()){
+//            countMap.put(e,countMap.getOrDefault(e,0)+1);
+//        }
+//
+//        System.out.println(countMap);
+//        for(Map.Entry<Character,Integer> entry :countMap.entrySet()){
+//
+//            if(entry.getValue()==1){
+//                System.out.println("Non Repeating first character"+entry.getKey());
+//                return;
+//            }
+//
+//        }
+
+
+       // Given a list of integers: List<Integer> list = Arrays.asList(2, 4, 5, 7, 9, 4, 5, 2, 6);
+       // how would you find all duplicate elements using Java 8 Streams?
+
+
+        List<Integer> listInteger = Arrays.asList(2, 4, 5, 7, 9, 4, 5, 2, 6);
+
+        Set<Integer> seenInteger =new HashSet<>();
+        Set<Integer> duplicatesInteger = listInteger.stream().filter(
+                e->!seenInteger.add(e))
+                .collect(Collectors.toSet());
+
+        System.out.println("Duplicate Integers"+duplicatesInteger);
+
+
+        //2.Program to get 3rd Max salary in java 8
+
+
+        List<Employee> empl= List.of(
+                new Employee("Amit","IT",30000),
+                new Employee("Sumit","bio",40000),
+                new Employee("rohan","Compute science",90000),
+                new Employee("rohan","Compute science",20000)
+        );
+
+       List<Double> Highest3Sal= empl.stream().
+                sorted(Comparator.comparing(Employee::getSalary).reversed())
+                .map(Employee::getSalary).
+                 skip(2).
+                 limit(1).
+                 toList();
+
+        System.out.println("Third Highest Salary"+Highest3Sal);
+
+
+        //3.reverse String using Java 8 - String buffer
+
+            StringBuffer sb=new StringBuffer("Amit");
+           System.out.println("Reversed String using StringBuffer"+" : "+sb.reverse());
+
+
+           //Get the employee name by deparment wise, using stream api?
+
+        Map<String,List<String>> e=
+                employeeList.stream().
+                        collect(Collectors.groupingBy(
+                                Employee::getDept,
+                                Collectors.mapping(Employee::getName,
+                                Collectors.toList())));
+        System.out.println("Name department wise"+e);
+
+
+       // Get the employee by name starts with "A" and In department "HR"
+
+        List<String> res= employeeList.stream()
+                .filter(c->c.getName().startsWith("A")
+                        && c.getDept().equalsIgnoreCase("IT")).
+                map(Employee::getName)
+                .toList();
+
+        System.out.println("Employe in particular Department "+res);
+
+
+        // second highest salary in each dept
+
+
+
+        Map<String,Optional<Employee>> m = employeeList.stream()
+                .collect(Collectors.groupingBy(Employee::getDept,
+                Collectors.collectingAndThen(Collectors.toList(),
+                        list->list.stream()
+                                .sorted(Comparator.comparing(Employee::getSalary).reversed())
+                                .skip(1)
+                                .findFirst())
+                        ));
+
+
+        //find the largest and second largest in an array without using sort
+
+
+        int[] num={5,15,20,19,7};
+
+        int largestNumber = Integer.MIN_VALUE;
+        int secondLargestNumber = Integer.MIN_VALUE;
+
+        for (int no : num){
+
+            if(no>largestNumber){
+                secondLargestNumber=largestNumber;
+                largestNumber=no;
+            }
+            else if (no > secondLargestNumber && no !=largestNumber){
+                secondLargestNumber=no;
+            }
+            System.out.println("largest Number"+largestNumber);
+            System.out.println("Second Largest Number"+secondLargestNumber);
+
+        }
+
+
+        //3. Given a list of integers, generate all unique pairs (a, b)
+        // such that the sum of a + b equals a specified target value (e.g., 5).
+        // The result should be a list of string-formatted pairs.
+
+
+
+
+
+//
+//        Algorithm Question: Find the Next Greater Number Using Digits of a Given Number
+//        Example: For input 218765, the next greater number using the same digits is 251678.
+
+
+
+        //Given the following code
+        //Map<Employee, Integer> map = new HashMap<>();
+        // Employee e3 = new Employee("John", 101);
+        //map.put(e3, 3);
+       // map.put(e3, 4);
+        //Size of map with below scenarios? - compile time error as same reference object
+
+    }
+}
+
+
+
+//public class  Main {
+//
+//    static int number = 1;
+//    static final int MAX = 10;
+//
+//    static Semaphore s1 = new Semaphore(1); // t1 starts
+//    static Semaphore s2 = new Semaphore(0);
+//    static Semaphore s3 = new Semaphore(0);
+//
+//    public static void main(String[] args) {
+//
+//        try (ExecutorService executor = Executors.newFixedThreadPool(3)) {
+//
+//            executor.submit(() -> print("t1", s1, s2));
+//            executor.submit(() -> print("t2", s2, s3));
+//            executor.submit(() -> print("t3", s3, s1));
+//
+//            executor.shutdown();
+//        }
+//    }
+//
+//    private static void print(String name, Semaphore current, Semaphore next) {
+//        while (true) {
+//            try {
+//                current.acquire();
+//
+//                if (number > MAX) {
+//                    next.release(); // prevent deadlock
+//                    break;
+//                }
+//
+//                System.out.println(name + "-" + number++);
+//                next.release(); // passes the control to next thread in sequence
+//
+//            } catch (InterruptedException e) {
+//                Thread.currentThread().interrupt();
+//            }
+//        }
+//    }
+//}
+
+
+// Threading check
+// class Main {
+//
+//        static int number = 1;
+//        static final int MAX = 10;
+//
+//        public static void main(String[] args) throws InterruptedException {
+//
+//            while (number <= MAX) {
+//
+//                Thread t1 = new Thread(() -> {
+//                    if (number <= MAX) {
+//                        System.out.println("t1-" + number++);
+//                    }
+//                });
+//
+//                Thread t2 = new Thread(() -> {
+//                    if (number <= MAX) {
+//                        System.out.println("t2-" + number++);
+//                    }
+//                });
+//
+//                Thread t3 = new Thread(() -> {
+//                    if (number <= MAX) {
+//                        System.out.println("t3-" + number++);
+//                    }
+//                });
+//
+//                t1.start();
+//                t1.join();   // wait till t1 finishes
+//
+//                t2.start();
+//                t2.join();   // wait till t2 finishes
+//
+//                t3.start();
+//                t3.join();   // wait till t3 finishes
+//            }
+//        }
+//    }
+
+
+
+

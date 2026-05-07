@@ -340,7 +340,34 @@ public class Main {
         //map.put(e3, 3);
        // map.put(e3, 4);
         //Size of map with below scenarios? - compile time error as same reference object
+	//Given a decimal Array print elements highest to lowest.
+	double[] arr = {12.45, 6.9 , 23.58, 17.13,  42.89, 33.78, 71.85};
+	
+		Arrays.stream(arr)
+      .boxed()  // double → Double
+      .sorted(Comparator.reverseOrder()).forEach(System.out::println);
+      
+      
+     // Print only numbers by eliminating all other characters from String.
+      	String s1 = "1,1,4,5@3,1{6,7,4,8,9,3,4:5:7:?5?9?3?5?6,2";
+      
+               String result = s1.chars()
+                  .filter(Character::isDigit)
+                  .mapToObj(c -> String.valueOf((char) c))
+                  .collect(Collectors.joining());
 
+System.out.println(result);
+
+String d = "Hello World",rev="";
+String [] words =d.split(" ");
+
+
+for(String w : words){
+    StringBuilder s = new StringBuilder(w);
+    rev=rev+s.reverse().toString();
+}
+
+System.out.println("Reversed String"+rev);
     }
 }
 

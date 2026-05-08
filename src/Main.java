@@ -505,20 +505,134 @@ public class Main {
                   .mapToObj(c -> String.valueOf((char) c))
                   .collect(Collectors.joining());
 
-System.out.println(result);
+                System.out.println(result);
 
-String d = "Hello World",rev="";
-String [] words =d.split(" ");
+        String d = "Hello World",rev="";
+        String [] words =d.split(" ");
 
 
-for(String w : words){
-    StringBuilder s = new StringBuilder(w);
-    rev=rev+s.reverse().toString();
-}
+         for(String w : words){
+                StringBuilder s = new StringBuilder(w);
+                rev=rev+s.reverse().toString();
+                }
 
-System.out.println("Reversed String"+rev);
-    }
-}
+                System.out.println("Reversed String"+rev);
+                }
+                }
+
+
+        //reverse a string after removing the vowels.
+        String str "abkhhoui";
+        String vowels = "aeiouAEIOU";
+        StringBuilder sb = new StringBuilder();
+
+        // Remove vowels
+        for (char c : str.toCharArray()) {
+            if (vowels.indexOf(c) == -1) {
+                sb.append(c);
+            }
+        }
+
+        // Reverse result
+        System.out.println("Reversed String "+ sb.reverse().toString());
+
+
+        // find the number Starts with 1
+
+        List<Integer>number = List. Of(10,50,12,34,78);
+          number.stream()
+              .map(String::valueOf)        // convert Integer → String
+              .filter(n -> n.startsWith("1")) // check starts with '1'
+              .forEach(System.out::println);
+
+
+        //sum of 2 largest number in a list 
+
+        List<Integer> number1 = List.of(1, 5, 3, 4, 7);
+
+         List<Integer> top2 = number1.stream()
+                .sorted(Comparator.reverseOrder())
+                .limit(2)
+                .toList();
+
+        int sum = top2.get(0) + top2.get(1);
+
+        System.out.println("Top 2: " + top2);
+        System.out.println("Sum: " + sum);
+
+
+        //Find 3 Maximum and 3 Minimum number from given list - [45, 12, 56, 15, 24, 75, 31, 89]
+
+        List<Integer> numbers = List.of(45, 12, 56, 15, 24, 75, 31, 89);
+
+        // 3 Minimum numbers
+        List<Integer> min3 = numbers.stream()
+                .sorted()
+                .limit(3)
+                .toList();
+
+        // 3 Maximum numbers
+        List<Integer> max3 = numbers.stream()
+                .sorted(Comparator.reverseOrder())
+                .limit(3)
+                .toList();
+
+        System.out.println("Min 3: " + min3);
+        System.out.println("Max 3: " + max3);
+
+
+        // Find the longest word
+
+         List<String> words = Arrays.asList("apple", "banana", "kiwi", "grapefruit");
+
+        String longest = words.stream()
+                .max(Comparator.comparingInt(String::length))
+                .orElse("");
+
+        System.out.println("Longest word: " + longest);
+
+        //Predict the output
+
+        String s1="Sachin";
+        String s2="Sachin";  
+        String s3="Umang"; 
+        String s4= new String("Varun"); 
+
+        System.out.println(s1.compareTo(s2)); // 0
+        System.out.println(s1.compareTo(s3)); // -2
+        System.out.println(s4.compareTo(s1)); // 3
+
+
+        //Sort employee name and employee department
+
+         List<Employee> sorted = employeeList.stream()
+                .sorted(Comparator.comparing(Employee::getName)
+                        .thenComparing(Employee::getDept))
+                .toList();
+
+        sorted.forEach(System.out::println)
+
+
+        // Demo code for functional Interface Supplier ,consumer ,predicate 
+
+        Supplier<String> supplier = () -> "Hello Amit";
+
+        System.out.println(supplier.get());
+
+
+        Consumer<String> consumer=(name)->
+               consumer.accept("Amit");
+               System.out.println(  "Hello"+name);
+        
+
+        Predicate<Integer> isEven = n-> n % 2 == 0;
+        System.out.println(isEven.test(10));
+        System.out.println(isEven.test(3));
+
+
+
+      
+
 
 
 

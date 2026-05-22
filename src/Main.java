@@ -630,7 +630,27 @@ public class Main {
         System.out.println(isEven.test(3));
 
 
+        // Input String : AAABBCCA  Output : A3B3C2A4 - WRITE JAVA PROGRAM
 
+        String characterCount = "AAABBCCA";
+
+        StringBuilder builder = new StringBuilder();
+
+        int count = 1;
+
+        for (int i = 0; i < characterCount.length(); i++) {
+
+            // If next char is same → increase count
+            if (i < characterCount.length() - 1 && characterCount.charAt(i) == characterCount.charAt(i + 1)) {
+                count++;
+            } else {
+                // Append current char + count
+                builder.append(characterCount.charAt(i)).append(count);
+                count = 1;
+            }
+        }
+
+        System.out.println("Consecutive String Counts "+builder.toString());
 
     }
 
